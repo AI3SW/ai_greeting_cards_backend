@@ -3,6 +3,7 @@ from logging.config import dictConfig
 
 from config import LOGGING_CONFIG
 from flask import Flask
+from flask_cors import CORS
 
 dictConfig(LOGGING_CONFIG)
 
@@ -11,6 +12,9 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object('config')
     # app.config.from_pyfile('config.py')
+
+    # flask-cors
+    CORS(app)
 
     # init model store
     from flask_app.model import init_model_store
