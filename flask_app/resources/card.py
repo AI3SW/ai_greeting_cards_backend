@@ -10,11 +10,10 @@ CARDS_ENDPOINT = '/cards'
 class CardListResource(Resource):
     def get(self):
         logging.info('GET %s', CARDS_ENDPOINT)
-        # cards = Card.query.all()
-        # TODO: remove returning of dummy data
-        cards = [
-            Card(id=1, name='dummy_1', img_path='dummy/raw.jpg'),
-            Card(id=2, name='dummy_2', img_path='dummy/raw.jpg')
-        ]
 
-        return {"cards": card_list_schema.dump(cards)}
+        cards: list = Card.query.all()
+
+        if cards:
+            return {"cards": card_list_schema.dump(cards)}
+        else:
+            return {"error": "No cards found in database"}

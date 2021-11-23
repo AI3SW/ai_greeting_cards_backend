@@ -22,4 +22,4 @@ VALUES
 INSERT INTO
     "card" ("name", "img_path")
 VALUES
-    ('raw', 'raw.jpg');
+    ('raw', 'dummy/raw.jpg');
