@@ -23,6 +23,19 @@ $ conda env create --file environments/environment.yml
 $ conda activate ai-greeting-cards-flask
 ```
 
+## Instance Configuration
+
+In [./instance/config.py](instance/config.py):
+
+```python
+DB_USERNAME = "postgres"
+DB_PASSWORD = "PASSWORD"
+DB_IP_ADDR = "<DB_IP_ADDR>"
+DB_PORT = "5432"
+DATABASE_NAME = "<DATABASE_NAME>"
+SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_IP_ADDR}:{DB_PORT}/{DATABASE_NAME}"
+```
+
 ## Serve Flask App
 
 ### Using Flask Built-in Development Server

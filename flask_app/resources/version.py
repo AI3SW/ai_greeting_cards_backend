@@ -10,7 +10,5 @@ VERSION_ENDPOINT = '/version'
 class VersionResource(Resource):
     def get(self):
         logging.info('GET %s', VERSION_ENDPOINT)
-        # version = Version.query.first_or_404()
-        # TODO: remove return of dummy data
-        version = Version(version='dummy_version')
+        version = Version.query.first_or_404()
         return version_schema.dump(version)
