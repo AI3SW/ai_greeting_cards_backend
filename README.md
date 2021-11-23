@@ -53,9 +53,9 @@ Using `psql`:
 
 ```bash
 $ POSTGRES_PASSWORD=<your postgres password>
-$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -f scripts/create_db.sql
-$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -d ai_3_staging_greeting_cards -f scripts/create_tables.sql
-$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -d ai_3_greeting_cards -f scripts/create_tables.sql
+$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -f scripts/database/create_db.sql
+$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -d ai_3_staging_greeting_cards -f scripts/database/create_tables.sql
+$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -d ai_3_greeting_cards -f scripts/database/create_tables.sql
 ```
 
 ### Seed Database
@@ -63,5 +63,5 @@ $ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -d ai_3_greeting_c
 ```bash
 # seed database
 $ POSTGRES_PASSWORD=<your postgres password>
-$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -d ai_3_staging_greeting_cards -f scripts/seed_db.sql
+$ PGPASSWORD=$POSTGRES_PASSWORD psql -U postgres -h localhost -d ai_3_staging_greeting_cards -f scripts/database/seed_db.sql
 ```

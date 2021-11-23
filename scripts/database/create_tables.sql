@@ -1,5 +1,6 @@
 -- set search path
-SET search_path TO PUBLIC;
+SET
+    search_path TO PUBLIC;
 
 -- drop tables
 DROP TABLE IF EXISTS "session";
@@ -15,9 +16,7 @@ DROP TABLE IF EXISTS "input_img";
 DROP TABLE IF EXISTS "version";
 
 -- create tables
-CREATE TABLE "version" (
-    "version" varchar PRIMARY KEY
-);
+CREATE TABLE "version" ("version" VARCHAR PRIMARY KEY);
 
 CREATE TABLE "input_img" (
     "id" serial PRIMARY KEY,
@@ -37,16 +36,14 @@ CREATE TABLE "card" (
     "img_path" text NOT NULL
 );
 
-CREATE TABLE "user" (
-    "id" varchar PRIMARY KEY
-);
+CREATE TABLE "user" ("id" VARCHAR PRIMARY KEY);
 
 CREATE TABLE "session" (
     "id" serial PRIMARY KEY,
-    "user_id" varchar,
-    "card_d" int,
-    "input_img_id" int,
-    "output_img_id" int,
+    "user_id" VARCHAR,
+    "card_id" INT,
+    "input_img_id" INT,
+    "output_img_id" INT,
     "start_time" timestamptz,
     "end_time" timestamptz,
     FOREIGN KEY ("card_id") REFERENCES "card" ("id") ON DELETE CASCADE,
@@ -54,4 +51,3 @@ CREATE TABLE "session" (
     FOREIGN KEY ("output_img_id") REFERENCES "output_img" ("id"),
     FOREIGN KEY ("user_id") REFERENCES "user" ("id")
 );
-
