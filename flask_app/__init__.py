@@ -14,7 +14,7 @@ def create_app():
     app.config.from_pyfile('config.py')
 
     # flask-cors
-    CORS(app)
+    CORS(app, resources=r'/*')
 
     # init model store
     from flask_app.model import init_model_store
