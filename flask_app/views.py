@@ -1,12 +1,15 @@
 import logging
 import time
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Blueprint, current_app, render_template, request
 from PIL import Image
 
-from flask_app.commons.util import pil_to_base64
-from flask_app.database.database import Card
+from flask_app.commons.util import base64_to_pil, pil_to_base64
+from flask_app.database import db
+from flask_app.database.database import Card, InputImg, OutputImg, Session
 from flask_app.model import model_store, simswap
 
 blueprint = Blueprint('blueprint', __name__)
@@ -53,9 +56,33 @@ def predict():
                                            ref_img=card_base64)
 
         ###############     START DATABASE      ###############
-        # TODO: implement database section
-        # save input and outputs
-        # save session
+
+        db_start_time = time.time()
+
+        ##### save images #####
+        input_img, output_img = _save_images(input_base64, output_base64)
+
+        # add and commit images in SQLAlchemy format
+        # Need to do commit to db first so that we can get input and output image's id
+        db.session.add_all([input_img, output_img])
+        db.session.commit()
+        ##### end save images #####
+
+        ##### save user and session #####
+        # TODO: generate and save user
+        session = Session(user_id="dummy_user_id",
+                          card_id=card_id,
+                          input_img_id=input_img.id,
+                          output_img_id=output_img.id,
+                          start_time=datetime.fromtimestamp(start_time, timezone.utc))
+
+        db.session.add(session)
+        db.session.commit()
+        ##### save user and session #####
+
+        db_end_time = time.time()
+        logging.info('Total databasing time: %.3fs.' %
+                     (db_end_time - db_start_time))
 
         ###############     END DATABASE        ###############
 
@@ -116,3 +143,20 @@ def email():
             'success': False,
             'error': 'email not sent'
         }
+
+
+def _save_images(input_base64, output_base64):
+    # process input
+    input_pil = base64_to_pil(input_base64)
+    input_file_path = Path(current_app.config['INPUT_IMG_PATH']) \
+        / f'{uuid.uuid4()}.jpg'
+    input_pil.save(input_file_path)
+    input_img = InputImg(file_path=str(input_file_path.resolve()))
+
+    # process output
+    output_pil = base64_to_pil(output_base64)
+    output_file_path = Path(current_app.config['OUTPUT_IMG_PATH']) \
+        / f'{uuid.uuid4()}.jpg'
+    output_pil.save(output_file_path)
+    output_img = OutputImg(file_path=str(output_file_path.resolve()))
+    return input_img, output_img

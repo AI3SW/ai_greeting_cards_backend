@@ -1,5 +1,6 @@
 import logging
 from logging.config import dictConfig
+from pathlib import Path
 
 from config import LOGGING_CONFIG
 from flask import Flask
@@ -45,5 +46,9 @@ def create_app():
     api = Api(app)
     api.add_resource(CardListResource, CARDS_ENDPOINT)
     api.add_resource(VersionResource, VERSION_ENDPOINT)
+
+    # create resources directory if needed
+    Path(app.config["INPUT_IMG_PATH"]).mkdir(exist_ok=True, parents=True)
+    Path(app.config["OUTPUT_IMG_PATH"]).mkdir(exist_ok=True, parents=True)
 
     return app

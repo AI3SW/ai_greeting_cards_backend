@@ -24,3 +24,6 @@ MODEL_CONFIG = {
 }
 
 ASSETS_PATH = './assets'
+
+INPUT_IMG_PATH = "./resources/input_img"
+OUTPUT_IMG_PATH = "./resources/output_img"

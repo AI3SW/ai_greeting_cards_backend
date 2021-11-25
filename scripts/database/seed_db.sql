@@ -23,3 +23,9 @@ INSERT INTO
     "card" ("name", "img_path")
 VALUES
     ('raw', 'dummy/raw.jpg');
+
+-- seed user table
+INSERT INTO
+    "user" ("id")
+VALUES
+    ('dummy_user_id');
