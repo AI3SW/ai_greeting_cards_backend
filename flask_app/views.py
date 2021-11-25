@@ -5,8 +5,9 @@ from pathlib import Path
 from flask import Blueprint, current_app, render_template, request
 from PIL import Image
 
-from flask_app.commons.util import image_to_base64
-from flask_app.model import model_store
+from flask_app.commons.util import pil_to_base64
+from flask_app.database.database import Card
+from flask_app.model import model_store, simswap
 
 blueprint = Blueprint('blueprint', __name__)
 
@@ -32,14 +33,34 @@ def predict():
     try:
         start_time = time.time()
 
-        # TODO: implement model inference
-        # return dummy image
-        img_path = (Path(current_app.config["ASSETS_PATH"])
-                    / 'dummy/transformed.jpeg').resolve()
-        img = Image.open(img_path)
-        base64_img = image_to_base64(img)
+        # get inputs
+        input_base64 = req.get('img')
+        card_id = req.get('card_id')
 
-        response = {'output_img': base64_img}
+        # get requested card asset in base64 encoded string
+        card = Card.query.get_or_404(card_id)
+        card_img_path = (Path(current_app.config['ASSETS_PATH'])
+                         / card.img_path).resolve()
+        card_pil = Image.open(card_img_path)
+        card_base64 = pil_to_base64(card_pil)
+
+        # cookie/session handling
+        # TODO: generate user id and place in cookie/session
+
+        # model inference
+        model: simswap.SimSwapModel = model_store['simswap']
+        output_base64: str = model.predict(src_image=input_base64,
+                                           ref_img=card_base64)
+
+        ###############     START DATABASE      ###############
+        # TODO: implement database section
+        # save input and outputs
+        # save session
+
+        ###############     END DATABASE        ###############
+
+        # send back response
+        response = {'output_img': output_base64}
 
         end_time = time.time()
         logging.info('Total prediction time: %.3fs.' % (end_time - start_time))
@@ -54,7 +75,15 @@ def predict():
 @blueprint.route('/email', methods=['POST'])
 def email():
     logging.info("POST /email")
-    req = request.get_json()
+
+    try:
+        req = request.get_json()
+    except Exception as error:
+        logging.error(error)
+        return {
+            'success': False,
+            'error': 'email not sent'
+        }
 
     expected_keys = {
         'sender_name', 'sender_email',

@@ -4,7 +4,7 @@ from flask import current_app
 from flask_marshmallow import Marshmallow
 from PIL import Image
 
-from flask_app.commons.util import image_to_base64
+from flask_app.commons.util import pil_to_base64
 from flask_app.database.database import Version, Card
 
 ma = Marshmallow()
@@ -26,7 +26,7 @@ class CardSchema(ma.SQLAlchemyAutoSchema):
         img_path = (Path(current_app.config["ASSETS_PATH"])
                     / obj.img_path).resolve()
         img = Image.open(img_path)
-        return image_to_base64(img)
+        return pil_to_base64(img)
 
 
 version_schema = VersionSchema()
