@@ -51,4 +51,8 @@ def create_app():
     Path(app.config["INPUT_IMG_PATH"]).mkdir(exist_ok=True, parents=True)
     Path(app.config["OUTPUT_IMG_PATH"]).mkdir(exist_ok=True, parents=True)
 
+    # register redis
+    from flask_app.redis import redis_client
+    redis_client.init_app(app)
+
     return app
