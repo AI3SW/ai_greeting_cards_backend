@@ -59,4 +59,8 @@ def create_app():
     app.config['SESSION_REDIS'] = redis.from_url(app.config['REDIS_URL'])
     Session().init_app(app)
 
+    # register Flask-Mail
+    from flask_app.mail import mail
+    mail.init_app(app)
+
     return app

@@ -18,3 +18,4 @@ dependencies:
     - Flask-Cors==3.0.10
     - redis==4.1.0
     - flask-session==0.4.0
+    - Flask-Mail==0.9.1

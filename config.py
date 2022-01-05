@@ -30,3 +30,18 @@ OUTPUT_IMG_PATH = "./resources/output_img"
 
 # redis config
 SESSION_TYPE = 'redis'
+
+# Config for sending email
+MAIL_DEBUG = False
+
+##########                      Mailtrap                    ##########
+##########  We use Mailtrap for development and testing     ##########
+# MAIL_SERVER = 'smtp.mailtrap.io'
+# MAIL_PORT = 2525
+# MAIL_USE_TLS = True
+
+##########                      SendGrid                    ##########
+# https://sendgrid.com/blog/sending-emails-from-python-flask-applications-with-twilio-sendgrid/
+MAIL_SERVER = 'smtp.sendgrid.net'
+MAIL_PORT = 587
+MAIL_USE_TLS = False

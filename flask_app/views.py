@@ -5,11 +5,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Blueprint, current_app, render_template, request, session
+from flask_mail import Message
 from PIL import Image
 
 from flask_app.commons.util import base64_to_pil, pil_to_base64
 from flask_app.database import db
 from flask_app.database.database import Card, InputImg, OutputImg, Session
+from flask_app.mail import mail
 from flask_app.model import model_store, simswap
 
 blueprint = Blueprint('blueprint', __name__)
@@ -138,6 +140,17 @@ def email():
         output_img_path = session.get('output_img')
 
         if output_img_path:
+            # send email
+            message_body = f"Hi {req.get('recipient_name')},\n\n{req.get('message')}"
+            message = Message(subject="Season's Greetings!",
+                              recipients=[req.get('recipient_email')],
+                              body=message_body)
+
+            with open(output_img_path, 'rb') as f:
+                message.attach("greeting_card.jpg", "image/jpeg", f.read())
+
+            mail.send(message)
+
             response = {'success': True}
 
             end_time = time.time()
