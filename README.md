@@ -34,6 +34,12 @@ DB_IP_ADDR = "<DB_IP_ADDR>"
 DB_PORT = "5432"
 DATABASE_NAME = "<DATABASE_NAME>"
 SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_IP_ADDR}:{DB_PORT}/{DATABASE_NAME}"
+REDIS_IP_ADDR = "localhost"
+REDIS_PORT = "6379"
+REDIS_URL = f"redis://{REDIS_IP_ADDR}:{REDIS_PORT}"
+MAIL_USERNAME = "<MAIL_USERNAME>"
+MAIL_PASSWORD = "<MAIL_PASSWORD>"
+MAIL_DEFAULT_SENDER = "<MAIL_DEFAULT_SENDER>"
 ```
 
 ## Serve Flask App
@@ -43,6 +49,14 @@ SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_IP_ADDR
 ```bash
 $ export FLASK_APP=flask_app FLASK_ENV=development
 $ flask run --host=0.0.0.0 --port=5000
+```
+
+## Redis
+
+### Run Redis using Docker
+
+```bash
+$ docker run --name redis -p 6379:6379 --rm -d redis
 ```
 
 ## Databasing

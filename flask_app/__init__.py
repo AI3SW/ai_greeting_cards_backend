@@ -5,6 +5,9 @@ from pathlib import Path
 from config import LOGGING_CONFIG
 from flask import Flask
 from flask_cors import CORS
+from flask_session import Session
+
+import redis
 
 dictConfig(LOGGING_CONFIG)
 
@@ -50,5 +53,14 @@ def create_app():
     # create resources directory if needed
     Path(app.config["INPUT_IMG_PATH"]).mkdir(exist_ok=True, parents=True)
     Path(app.config["OUTPUT_IMG_PATH"]).mkdir(exist_ok=True, parents=True)
+
+    # register Flask-Session
+    # some config
+    app.config['SESSION_REDIS'] = redis.from_url(app.config['REDIS_URL'])
+    Session().init_app(app)
+
+    # register Flask-Mail
+    from flask_app.mail import mail
+    mail.init_app(app)
 
     return app

@@ -4,12 +4,14 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Blueprint, current_app, render_template, request
+from flask import Blueprint, current_app, render_template, request, session
+from flask_mail import Message
 from PIL import Image
 
 from flask_app.commons.util import base64_to_pil, pil_to_base64
 from flask_app.database import db
 from flask_app.database.database import Card, InputImg, OutputImg, Session
+from flask_app.mail import mail
 from flask_app.model import model_store, simswap
 
 blueprint = Blueprint('blueprint', __name__)
@@ -70,13 +72,13 @@ def predict():
 
         ##### save user and session #####
         # TODO: generate and save user
-        session = Session(user_id="dummy_user_id",
-                          card_id=card_id,
-                          input_img_id=input_img.id,
-                          output_img_id=output_img.id,
-                          start_time=datetime.fromtimestamp(start_time, timezone.utc))
+        session_obj = Session(user_id="dummy_user_id",
+                              card_id=card_id,
+                              input_img_id=input_img.id,
+                              output_img_id=output_img.id,
+                              start_time=datetime.fromtimestamp(start_time, timezone.utc))
 
-        db.session.add(session)
+        db.session.add(session_obj)
         db.session.commit()
         ##### save user and session #####
 
@@ -85,6 +87,9 @@ def predict():
                      (db_end_time - db_start_time))
 
         ###############     END DATABASE        ###############
+
+        # cache file path of output_img
+        session['output_img'] = output_img.file_path
 
         # send back response
         response = {'output_img': output_base64}
@@ -128,14 +133,38 @@ def email():
     try:
         start_time = time.time()
 
-        # TODO: implement emailing of card
-        # return dummy response
-        response = {'success': True}
+        # get file path of output image
+        output_img_path = session.get('output_img')
 
-        end_time = time.time()
-        logging.info('Total time to email: %.3fs.' % (end_time - start_time))
+        if output_img_path:
+            # send email
+            message_body = f"Hi {req.get('recipient_name')},\n\n{req.get('message')}"
+            message = Message(subject="Season's Greetings!",
+                              recipients=[req.get('recipient_email')],
+                              body=message_body)
 
-        return response
+            with open(output_img_path, 'rb') as f:
+                message.attach("greeting_card.jpg", "image/jpeg", f.read())
+
+            mail.send(message)
+
+            response = {'success': True}
+
+            end_time = time.time()
+            logging.info('Total time to email: %.3fs.' %
+                         (end_time - start_time))
+
+            session.clear()
+
+            return response
+
+        else:
+            error_msg = f"No output image was found for current web session."
+            logging.exception(error_msg)
+            return {
+                'success': False,
+                'error': error_msg
+            }
 
     except Exception as error:
         logging.exception(error)
