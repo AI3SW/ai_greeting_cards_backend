@@ -133,9 +133,6 @@ def email():
     try:
         start_time = time.time()
 
-        # TODO: implement emailing of card
-        # return dummy response
-
         # get file path of output image
         output_img_path = session.get('output_img')
 
