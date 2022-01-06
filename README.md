@@ -51,6 +51,14 @@ $ export FLASK_APP=flask_app FLASK_ENV=development
 $ flask run --host=0.0.0.0 --port=5000
 ```
 
+## Redis
+
+### Run Redis using Docker
+
+```bash
+$ docker run --name redis -p 6379:6379 --rm -d redis
+```
+
 ## Databasing
 
 ### Run PostgreSQL using Docker
