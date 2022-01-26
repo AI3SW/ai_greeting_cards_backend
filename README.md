@@ -1,19 +1,6 @@
-# Flask App Template
+# ai_greeting_cards_backend
 
-Boilerplate code for a flask app to wrap around a Machine Learning Model.
-
-## Simple How to Use
-
-* Clone this repo
-* Update repository remote:
-
-```bash
-$ git remote set-url origin <newurl>
-```
-
-* Create your own model by extending from `BaseModel` in [declarations.py](flask_app/model/declarations.py)
-* update `init_model_store` function in [`model` package](flask_app/model/__init__.py)
-* update endpoints in [views.py](flask_app/views.py)
+Code repository for backend services used by AI Greeting Cards app.
 
 ## Create Environment using Conda
 

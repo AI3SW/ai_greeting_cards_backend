@@ -20,7 +20,7 @@ LOGGING_CONFIG = {
 }
 
 MODEL_CONFIG = {
-    'SIM_SWAP_PREDICT_URL': 'http://10.2.0.202:5001/predict'
+    'SIM_SWAP_PREDICT_URL': 'http://<SIMSWAP_IP>/predict'
 }
 
 ASSETS_PATH = './assets'
