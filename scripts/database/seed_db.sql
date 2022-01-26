@@ -22,7 +22,8 @@ VALUES
 INSERT INTO
     "card" ("name", "img_path")
 VALUES
-    ('raw', 'dummy/raw.jpg');
+    ('santa', 'templates/santa.jpg'),
+    ('cny', 'templates/cny.jpg');
 
 -- seed user table
 INSERT INTO
